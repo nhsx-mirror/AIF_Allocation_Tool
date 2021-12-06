@@ -1,34 +1,35 @@
 # ICS Place Based Allocation Tool 
 
-This project is a tool built in Python to assist Integrated Care Systems (ICSs) to perform need based allocation based on defined place. It uses the most recently produced GP Registered Practice Populations as well as the weighted populations calculated from the Allocation model for each of its components. More information on the Allocations process, as well as useful documentation can be found at https://www.england.nhs.uk/allocations/
+### About the Project
 
-The tool has been built using Streamlit, a Python app framework that can be used to create web apps. It can be installed by using the package manager pip. 
+This repository holds a tool built in Python to assist Integrated Care Systems (ICSs) to perform need based allocation based on defined place. It uses the most recently produced GP Registered Practice Populations as well as the weighted populations calculated from the Allocation model for each of its components. More information on the Allocations process, as well as useful documentation can be found at https://www.england.nhs.uk/allocations/
 
-```bash
-pip install streamlit
-```
+_**Note:** Only public data shared in this repository._
 
-The project virtual environment can be activated in bash using the following command
+### Built With
 
-```bash
-source venv/bin/activate 
-```
+[![Python v3.8](https://img.shields.io/badge/python-v3.8-blue.svg)](https://www.python.org/downloads/release/python-380/)
+- [Streamlit](https://pypi.org/project/streamlit/)
 
-To activate the virtual environment in Windows the following command can be used 
+### Getting Started
 
-```shell
-venv\Scripts\activate
-```
+#### Installation
 
-To explicitly install all the prerequisite packages to run the tool's script, in the terminal run the following command:  
-```shell
-pip install -r requirements.txt
-```
-To run the tool locally, in the terminal, whilst in the directory containing the tool run 
+To get a local copy up and running follow these simple steps.
 
-```bash
-streamlit run allocation_tool.py 
-```
+To clone the repo:
+
+`git clone https://github.com/nhsx/SynthVAE.git`
+
+To create a suitable environment:
+- ```python -m venv .venv```
+- `source .venv/bin/activate`
+
+To load all dependencies
+- `pip install -r requirements.txt`
+
+To run the tool
+- `streamlit run allocation_tool.py`
 
 Streamlit will then render the tool and display it in your default web browser. When run in this way, any changes to the script in your editor will change the app running locally. 
 
@@ -44,7 +45,9 @@ Full instructions for using the tool can be found in the user guide. The tool al
 
 ## Support 
 
-Enquiries about the overall allocation process can be directed to: england.revenue-allocations@nhs.net
+Enquiries about the overall allocation process can be directed to: england.revenue-allocations@nhs.net.
+
+Tool owners would like to acknowledge the contributions and support from NHSX Analytics Unit to get this up and running. 
 
 ## Copyright and License
 
