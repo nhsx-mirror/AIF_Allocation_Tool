@@ -22,11 +22,11 @@ To clone the repo:
 `git clone https://github.com/nhsx/SynthVAE.git`
 
 To create a suitable environment:
-- ```python -m venv .venv```
+- `python3 -m venv .venv`
 - `source .venv/bin/activate`
 
 To load all dependencies
-- `pip install -r requirements.txt`
+- `pip3 install -r requirements.txt`
 
 To run the tool
 - `streamlit run allocation_tool.py`
