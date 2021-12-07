@@ -34,8 +34,9 @@ st.markdown("- MORE EXPLANATION AROUND SINGLE ICS USE")
 group_file = st.file_uploader("Upload CSV",type=["csv"])
 if group_file is not None:
     df_group = pd.read_csv(group_file)
-    st.dataframe(df_group) 
-  
+    st.dataframe(df_group)
+    dict_group = df_group.to_dict('dict') 
+      
 # Load data and cache
 @st.cache  # Use Streamlit cache decorator to cache this operation so data doesn't have to be read in everytime script is re-run
 def get_data():
@@ -114,7 +115,36 @@ with left:
         
 with middle:
     if st.button("Calculate Need Indices of Uploaded", help="Save the selected practices to the named place", key="output_upload"):
-        session_state.list.clear() # place holder        
+        new_place = dict_group
+        session_state.places.append(new_place)  # Append the dictionary to a list that keeps track of practices in each place
+        place_practices = list(new_place.values())  # Assign the practices in the newly defined place to a list
+        place_practices = place_practices[0]  # place_practices is a list of lists so this turns it into a flat list
+        session_state.list.append(place_practices)  # Save the assigned practices to session state to remove them from the practice dropdown list
+        place_key = list(new_place.keys())  # Save place name to a list
+        place_name = place_key[0]  # Extract place name from the list
+        df_1 = data.query("Practice == @place_practices")  # Queries the original data and only returns the selected practices
+        df_1["Place Name"] = place_name  # adds the place name to the dataframe to allow it to be used for aggregation
+        df_2 = df_1.groupby('Place Name').agg(
+            {'GP_pop': 'sum', 'WP_G&A': 'sum', 'WP_CS': 'sum', 'WP_MH': 'sum', 'WP_Mat': 'sum', 'WP_HCHS': 'sum', 'EACA_index' : 'sum', "WP_Presc": 'sum', "WP_AM": 'sum', "WP_Overall": "sum"}) # aggregates the practices to give the aggregated place values
+        df_2 = df_2.astype(int)
+        session_state.df = session_state.df.append(df_2)  # Add the aggregated place to session state
+        store_data().clear()  # clear the data store so that this process can be repeated for next place
+        #session_state.df = session_state.df.apply(round)
+        df_3 = data.query("ICS == @ics_choice")
+        df_3["Place Name"] = ics_choice
+        df_4 = df_3.groupby('Place Name').agg(
+            {'GP_pop': 'sum', 'WP_G&A': 'sum', 'WP_CS': 'sum', 'WP_MH': 'sum', 'WP_Mat': 'sum', 'WP_HCHS': 'sum', 'EACA_index' : 'sum', "WP_Presc": 'sum', "WP_AM": 'sum', "WP_Overall": "sum"}) # aggregates the practices to give the aggregated place values
+        df_4 = df_4.astype(int)
+        session_state.df = session_state.df.append(df_4)
+        #session_state.df = session_state.df.append(session_state.df.sum().rename('{ics}'.format(ics=ics_choice)))
+        session_state.df["G&A_Index"] = (session_state.df["WP_G&A"]/session_state.df["GP_pop"])/((session_state.df.iloc[-1, 1])/(session_state.df.iloc[-1, 0]))
+        session_state.df["CS_Index"] = (session_state.df["WP_CS"]/session_state.df["GP_pop"])/((session_state.df.iloc[-1, 2])/(session_state.df.iloc[-1, 0]))
+        session_state.df["MH_Index"] = (session_state.df["WP_MH"]/session_state.df["GP_pop"])/((session_state.df.iloc[-1, 3])/(session_state.df.iloc[-1, 0]))
+        session_state.df["Mat_Index"] = (session_state.df["WP_Mat"]/session_state.df["GP_pop"])/((session_state.df.iloc[-1, 4])/(session_state.df.iloc[-1, 0]))
+        session_state.df["HCHS_Index"] = (session_state.df["WP_HCHS"]/session_state.df["GP_pop"])/((session_state.df.iloc[-1, 5])/(session_state.df.iloc[-1, 0]))
+        session_state.df["Presc_Index"] = (session_state.df["WP_Presc"]/session_state.df["GP_pop"])/((session_state.df.iloc[-1, 10])/(session_state.df.iloc[-1, 0]))
+        session_state.df["AM_Index"] = (session_state.df["WP_AM"]/session_state.df["GP_pop"])/((session_state.df.iloc[-1, 11])/(session_state.df.iloc[-1, 0]))
+        session_state.df["Overall_Index"] = (session_state.df["WP_Overall"]/session_state.df["GP_pop"])/((session_state.df.iloc[-1, 14])/(session_state.df.iloc[-1, 0]))     
         
 with right:
     if st.button("Reset", help="Reset the place selections and start again. Press a second time to restore Practice dropdown list"):
