@@ -42,6 +42,14 @@ st.set_page_config(
         "About": "This tool is designed to support allocation at places by allowing places to be defined by aggregating GP Practices within an ICB. Please refer to the User Guide for instructions. For more information on the latest allocations, including contact details, please refer to: [https://www.england.nhs.uk/allocations/](https://www.england.nhs.uk/allocations/)",
     },
 )
+padding = 1
+st.markdown(
+    f""" <style>
+    .reportview-container .main .block-container{{
+        padding-top: {padding}rem;
+    }} </style> """,
+    unsafe_allow_html=True,
+)
 
 # Set default place in session
 # -------------------------------------------------------------------------
@@ -369,11 +377,6 @@ for metric, name in zip(metric_cols, metric_names):
     place_metric, ics_metric = metric_calcs(df, metric,)
     cols[metric_cols.index(metric)].metric(
         name, place_metric,  # ics_metric, delta_color="inverse"
-    )
-st.write("**Selected Group ICB: **", icb_name)
-with st.expander("Caveats and Notes"):
-    st.markdown(
-        "The Community Services index relates to the half of Community Services that are similarly distributed to district nursing. The published Community Services target allocation is calculated using the Community Services model. This covers 50% of Community Services. The other 50% is distributed through the General & Acute model."
     )
 
 # Downloads
