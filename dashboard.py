@@ -498,7 +498,7 @@ metric_cols = [
     "Mental Health Index",
     "Maternity Index",
     "Prescribing Index",
-    "Overall Core Index",
+
 ]
 metric_names = [
     "Gen & Acute",
@@ -506,34 +506,34 @@ metric_names = [
     "Mental Health",
     "Maternity",
     "Prescribing",
-    "Overall Core",
+
 ]
 
 df = large_df.loc[large_df["Place / ICB"] == st.session_state.after]
 df = df.reset_index(drop=True)
 
+place_metric, icb_metric = metric_calcs(df, "Overall Core Index")
+st.metric("Overall Core Index",place_metric)
 
-st.write("**Relative Need Index**")
-cols = st.columns(len(metric_cols))
-for metric, name in zip(metric_cols, metric_names):
-    place_metric, icb_metric = metric_calcs(
-        df,
-        metric,
-    )
-    cols[metric_cols.index(metric)].metric(
-        name,
-        place_metric,  # icb_metric, delta_color="inverse"
-    )
+with st.expander("Core Sub-Indices (click to expand)"):
+    cols = st.columns(len(metric_cols))
+    for metric, name in zip(metric_cols, metric_names):
+        place_metric, icb_metric = metric_calcs(
+            df,
+            metric,
+        )
+        cols[metric_cols.index(metric)].metric(
+            name,
+            place_metric,  # icb_metric, delta_color="inverse"
+        )
 
 #primary care row
 place_metric, icb_metric = metric_calcs(df, "Primary Care Index")
-cols = st.columns(6)
-cols[5].metric("Primary Care",place_metric)
+st.metric("Primary Care",place_metric)
 
 #Health Inequals row
 place_metric, icb_metric = metric_calcs(df, "Health Inequalities Index")
-cols = st.columns(6)
-cols[5].metric("Health Inequal",place_metric)
+st.metric("Health Inequal",place_metric)
 
 # Downloads
 # -------------------------------------------------------------------------
